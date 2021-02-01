@@ -1,1 +1,163 @@
-[{"aereo":{"properties":[{"nMinu":{"required":false,"description":"Número da Minuta, Documento que precede o CT-e, assinado pelo expedidor, espécie de pedido de serviço","type":"string","pattern":"[0-9]{9}"}},{"nOCA":{"required":false,"description":"Número Operacional do Conhecimento Aéreo, Representa o número de controle comumente utilizado pelo conhecimento aéreo composto por uma sequência numérica de onze dígitos. Os três primeiros dígitos representam um código que os operadores de transporte aéreo associados à IATA possuem. Em seguida um número de série de sete dígitos determinados pelo operador de transporte aéreo. Para finalizar, um dígito verificador, que é um sistema de módulo sete imponderado o qual divide o número de série do conhecimento aéreo por sete e usa o resto como dígito de verificação.","type":"string","pattern":"[0-9]{11}"}},{"dPrevAereo":{"required":true,"description":"Data prevista da entrega, Formato AAAA-MM-DD","type":"string"}},{"natCarga":{"required":true,"description":"Natureza da carga","type":"object","allOf":[{"xDime":{"required":false,"description":"Dimensão, Formato:1234X1234X1234 (cm). Esse campo deve sempre que possível ser preenchido. Entretanto, quando for impossível o preenchimento das dimensões, fica obrigatório o preenchimento da cubagem em metro cúbico do leiaute do CT-e da estrutura genérica (infQ).","type":"string"}},{"cInfManu":{"required":false,"description":"Informações de manuseio, 01 - certificado do expedidor para embarque de animal vivo;  02 - artigo perigoso conforme Declaração do Expedidor anexa;  03 - somente em aeronave cargueira;   04 - artigo perigoso - declaração do expedidor não requerida;   05 - artigo perigoso em quantidade isenta;  06 - gelo seco para refrigeração (especificar no campo observações a quantidade);   07 - não restrito (especificar a Disposição Especial no campo observações);  08 - artigo perigoso em carga consolidada (especificar a quantidade no campo observações) ; 09 - autorização da autoridade governamental anexa (especificar no campo observações);   10 – baterias de íons de lítio em conformidade com a Seção II da PI965 – CAO ;  11 - baterias de íons de lítio em conformidade com a Seção II da PI966 ;  12 - baterias de íons de lítio em conformidade com a Seção II da PI967 ;  13 – baterias de metal lítio em conformidade com a Seção II da PI968 — CAO;   14 - baterias de metal lítio em conformidade com a Seção II da PI969;   15 - baterias de metal lítio em conformidade com a Seção II da PI970 ;  99 - outro (especificar no campo observações) .","type":"array","enum":["01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","99"],"items":{},"example":"01"}}]}},{"tarifa":{"required":true,"description":"Informações de tarifa","type":"object","allOf":[{"CL":{"required":true,"description":"Classe, Preencher com:          M - Tarifa Mínima;          G - Tarifa Geral;          E - Tarifa Específica","type":"string"}},{"cTar":{"required":false,"description":"Código da Tarifa, Deverão ser incluídos os códigos de três dígitos, correspondentes à tarifa.","type":"string"}},{"vTar":{"required":true,"description":"Valor da Tarifa, Valor da tarifa por kg quando for o caso.","type":"string"}}]}},{"peri":{"required":false,"description":"Preenchido quando for  transporte de produtos classificados pela ONU como perigosos., O preenchimento desses campos não desobriga a empresa aérea de emitir os demais documentos que constam na legislação vigente.","type":"array","items":{"allOf":[{"nONU":{"required":true,"description":"Número ONU/UN, Ver a legislação de transporte de produtos perigosos aplicadas ao modal","type":"string","pattern":"[0-9]{4}|ND"}},{"qTotEmb":{"required":true,"description":"Quantidade total de volumes contendo artigos perigosos, Preencher com o número de volumes (unidades) de artigos perigosos, ou seja, cada embalagem devidamente marcada e etiquetada (por ex.: número de caixas, de tambores, de bombonas, dentre outros). Não deve ser preenchido com o número de ULD, pallets ou containers.","type":"string"}},{"infTotAP":{"required":true,"description":"Grupo de informações das quantidades totais de artigos perigosos, Preencher conforme a legislação de transporte de produtos perigosos aplicada ao modal","type":"object","allOf":[{"qTotProd":{"required":true,"description":"Quantidade total de artigos perigosos, 15 posições, sendo 11 inteiras e 4 decimais.  Deve indicar a quantidade total do artigo perigoso, tendo como base a unidade referenciada na Tabela 3-1 do Doc 9284, por exemplo: litros; quilogramas; quilograma bruto etc. O preenchimento não deve, entretanto, incluir a unidade de medida. No caso de transporte de material radioativo, deve-se indicar o somatório dos Índices de Transporte (TI). Não indicar a quantidade do artigo perigoso por embalagem.","type":"string"}},{"uniAP":{"required":true,"description":"Unidade de medida, 1 – KG;  2 – KG G (quilograma bruto); 3 – LITROS; 4 – TI (índice de transporte para radioativos); 5- Unidades (apenas para artigos perigosos medidos em unidades que não se enquadram nos itens acima. Exemplo: baterias, celulares, equipamentos, veículos, dentre outros)","type":"string","enum":["1","2","3","4","5"],"example":"1"}}]}}]}}}]}}]
+[
+    {
+        "aereo": {
+            "properties": [
+                {
+                    "nMinu": {
+                        "required": false,
+                        "description": "Número da Minuta, Documento que precede o CT-e, assinado pelo expedidor, espécie de pedido de serviço",
+                        "type": "string",
+                        "pattern": "[0-9]{9}"
+                    }
+                },
+                {
+                    "nOCA": {
+                        "required": false,
+                        "description": "Número Operacional do Conhecimento Aéreo, Representa o número de controle comumente utilizado pelo conhecimento aéreo composto por uma sequência numérica de onze dígitos. Os três primeiros dígitos representam um código que os operadores de transporte aéreo associados à IATA possuem. Em seguida um número de série de sete dígitos determinados pelo operador de transporte aéreo. Para finalizar, um dígito verificador, que é um sistema de módulo sete imponderado o qual divide o número de série do conhecimento aéreo por sete e usa o resto como dígito de verificação.",
+                        "type": "string",
+                        "pattern": "[0-9]{11}"
+                    }
+                },
+                {
+                    "dPrevAereo": {
+                        "required": true,
+                        "description": "Data prevista da entrega, Formato AAAA-MM-DD",
+                        "type": "string"
+                    }
+                },
+                {
+                    "natCarga": {
+                        "required": true,
+                        "description": "Natureza da carga",
+                        "type": "object",
+                        "allOf": [
+                            {
+                                "xDime": {
+                                    "required": false,
+                                    "description": "Dimensão, Formato:1234X1234X1234 (cm). Esse campo deve sempre que possível ser preenchido. Entretanto, quando for impossível o preenchimento das dimensões, fica obrigatório o preenchimento da cubagem em metro cúbico do leiaute do CT-e da estrutura genérica (infQ).",
+                                    "type": "string"
+                                }
+                            },
+                            {
+                                "cInfManu": {
+                                    "required": false,
+                                    "description": "Informações de manuseio, 01 - certificado do expedidor para embarque de animal vivo;  02 - artigo perigoso conforme Declaração do Expedidor anexa;  03 - somente em aeronave cargueira;   04 - artigo perigoso - declaração do expedidor não requerida;   05 - artigo perigoso em quantidade isenta;  06 - gelo seco para refrigeração (especificar no campo observações a quantidade);   07 - não restrito (especificar a Disposição Especial no campo observações);  08 - artigo perigoso em carga consolidada (especificar a quantidade no campo observações) ; 09 - autorização da autoridade governamental anexa (especificar no campo observações);   10 – baterias de íons de lítio em conformidade com a Seção II da PI965 – CAO ;  11 - baterias de íons de lítio em conformidade com a Seção II da PI966 ;  12 - baterias de íons de lítio em conformidade com a Seção II da PI967 ;  13 – baterias de metal lítio em conformidade com a Seção II da PI968 — CAO;   14 - baterias de metal lítio em conformidade com a Seção II da PI969;   15 - baterias de metal lítio em conformidade com a Seção II da PI970 ;  99 - outro (especificar no campo observações) .",
+                                    "type": "array",
+                                    "items": {
+                                        "enum": [
+                                            "01",
+                                            "02",
+                                            "03",
+                                            "04",
+                                            "05",
+                                            "06",
+                                            "07",
+                                            "08",
+                                            "09",
+                                            "10",
+                                            "11",
+                                            "12",
+                                            "13",
+                                            "14",
+                                            "15",
+                                            "99"
+                                        ],
+                                        "example": "01",
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "tarifa": {
+                        "required": true,
+                        "description": "Informações de tarifa",
+                        "type": "object",
+                        "allOf": [
+                            {
+                                "CL": {
+                                    "required": true,
+                                    "description": "Classe, Preencher com:          M - Tarifa Mínima;          G - Tarifa Geral;          E - Tarifa Específica",
+                                    "type": "string"
+                                }
+                            },
+                            {
+                                "cTar": {
+                                    "required": false,
+                                    "description": "Código da Tarifa, Deverão ser incluídos os códigos de três dígitos, correspondentes à tarifa.",
+                                    "type": "string"
+                                }
+                            },
+                            {
+                                "vTar": {
+                                    "required": true,
+                                    "description": "Valor da Tarifa, Valor da tarifa por kg quando for o caso.",
+                                    "type": "string"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "peri": {
+                        "required": false,
+                        "description": "Preenchido quando for  transporte de produtos classificados pela ONU como perigosos., O preenchimento desses campos não desobriga a empresa aérea de emitir os demais documentos que constam na legislação vigente.",
+                        "type": "array",
+                        "items": {
+                            "allOf": [
+                                {
+                                    "nONU": {
+                                        "required": true,
+                                        "description": "Número ONU/UN, Ver a legislação de transporte de produtos perigosos aplicadas ao modal",
+                                        "type": "string",
+                                        "pattern": "[0-9]{4}|ND"
+                                    }
+                                },
+                                {
+                                    "qTotEmb": {
+                                        "required": true,
+                                        "description": "Quantidade total de volumes contendo artigos perigosos, Preencher com o número de volumes (unidades) de artigos perigosos, ou seja, cada embalagem devidamente marcada e etiquetada (por ex.: número de caixas, de tambores, de bombonas, dentre outros). Não deve ser preenchido com o número de ULD, pallets ou containers.",
+                                        "type": "string"
+                                    }
+                                },
+                                {
+                                    "infTotAP": {
+                                        "required": true,
+                                        "description": "Grupo de informações das quantidades totais de artigos perigosos, Preencher conforme a legislação de transporte de produtos perigosos aplicada ao modal",
+                                        "type": "object",
+                                        "allOf": [
+                                            {
+                                                "qTotProd": {
+                                                    "required": true,
+                                                    "description": "Quantidade total de artigos perigosos, 15 posições, sendo 11 inteiras e 4 decimais.  Deve indicar a quantidade total do artigo perigoso, tendo como base a unidade referenciada na Tabela 3-1 do Doc 9284, por exemplo: litros; quilogramas; quilograma bruto etc. O preenchimento não deve, entretanto, incluir a unidade de medida. No caso de transporte de material radioativo, deve-se indicar o somatório dos Índices de Transporte (TI). Não indicar a quantidade do artigo perigoso por embalagem.",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            {
+                                                "uniAP": {
+                                                    "required": true,
+                                                    "description": "Unidade de medida, 1 – KG;  2 – KG G (quilograma bruto); 3 – LITROS; 4 – TI (índice de transporte para radioativos); 5- Unidades (apenas para artigos perigosos medidos em unidades que não se enquadram nos itens acima. Exemplo: baterias, celulares, equipamentos, veículos, dentre outros)",
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "1",
+                                                        "2",
+                                                        "3",
+                                                        "4",
+                                                        "5"
+                                                    ],
+                                                    "example": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    }
+]

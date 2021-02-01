@@ -6,6 +6,7 @@ export interface SwaggerElement {
         enum: string[] | undefined;
         pattern: string | undefined;
         example: string | undefined;
+        items: SimpleTypePropertiesInterface | { allOf: SwaggerElement[] };
     };
 }
 
@@ -17,4 +18,11 @@ export interface BuildedSwagguerInterface {
     [x: string]: {
         properties: SwaggerElement[] | undefined;
     };
+}
+
+export interface SimpleTypePropertiesInterface {
+    enum: string[] | undefined;
+    pattern: string | undefined;
+    example: string | undefined;
+    type: string;
 }

@@ -4,8 +4,13 @@ import {
     DoccumentationType,
     Element,
     Sequence,
+    SimpleType,
 } from '../xsd/interfaces';
-import { SwaggerElement, SwagguerChoice } from './interfaces';
+import {
+    SimpleTypePropertiesInterface,
+    SwaggerElement,
+    SwagguerChoice,
+} from './interfaces';
 import { buildEnum, buildPattern } from './simpleType';
 
 export const removeSpecialCharecter = (text: string | null): string => {
@@ -40,11 +45,11 @@ export const buildType = (element: Element): 'object' | 'array' | 'string' => {
 export const buildRequired = (element: Element): boolean =>
     element['@minOccurs'] !== '0';
 
-export const getComplexTypePropertie = (
-    type: 'object' | 'array' | 'string',
-    complexType?: ComplexType,
+export const buildComplexTypePropertie = (
+    type: string,
+    complexType: ComplexType,
 ): { allOf: unknown } | { items: { allOf: unknown } } | undefined => {
-    const propertie = { allOf: buildComplexType(complexType) };
+    const propertie = { allOf: buildComplexType(complexType)! };
 
     if (type === 'array')
         return {
@@ -54,6 +59,27 @@ export const getComplexTypePropertie = (
         };
 
     return propertie;
+};
+
+export const buildSimplePropertie = (
+    type: string,
+    simpleType: SimpleType,
+): SimpleTypePropertiesInterface | { items: SimpleTypePropertiesInterface } => {
+    const enummeration = buildEnum(simpleType?.restriction?.enumeration);
+
+    const properties = {
+        enum: enummeration,
+        pattern: buildPattern(simpleType),
+        example: enummeration !== undefined ? enummeration[0] : undefined,
+        type: 'string',
+    };
+
+    if (type === 'array')
+        return {
+            items: properties,
+        };
+
+    return properties;
 };
 
 export const buildChoice = (choice?: Choice): SwagguerChoice | undefined => {
@@ -73,46 +99,54 @@ export const concatAllElementsOnSequence = (
     while (sequence !== undefined)
         return concatAllElementsOnSequence(
             sequence.sequence,
-            actual.concat(sequence.element as Element[]),
+            actual.concat((sequence.element || []) as Element[]),
         );
 
     return actual;
 };
 
-export const buildComplexType = (
-    complexType?: ComplexType,
-): SwaggerElement[] | undefined => {
-    if (!complexType) return undefined;
+export const concatAllChoicesOnSequence = (
+    sequence?: Sequence,
+    actual: Choice[] = [],
+): Choice[] => {
+    while (sequence !== undefined)
+        return concatAllChoicesOnSequence(
+            sequence.sequence,
+            actual.concat((sequence.choice || []) as Choice[]),
+        );
 
-    const elements: Element[] = concatAllElementsOnSequence(complexType.sequence);
-
-    const elementos = elements
-        ?.filter(element => element !== undefined)
-        .map(element => buildElement(element));
-
-    const choices =
-        buildChoice(complexType.choice || complexType.sequence?.choice) || [];
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return elementos.concat(choices as any);
+    return actual;
 };
 
-export const buildElement = (element: Element): SwaggerElement => {
-    const type = buildType(element);
-    const enummeration = buildEnum(element.simpleType?.restriction?.enumeration);
+export const buildComplexType = (complexType?: ComplexType): SwaggerElement[] => {
+    const elements: Element[] = concatAllElementsOnSequence(complexType?.sequence);
+    const choices: Choice[] = concatAllChoicesOnSequence(
+        complexType?.sequence,
+        complexType?.choice ? [complexType.choice] : [],
+    );
 
-    const complexType =
-        type !== 'string' ? getComplexTypePropertie(type, element.complexType) : {};
+    const properties = elements.map(element => buildElement(element));
+
+    const oneOfInstances = choices.map(choice => buildChoice(choice));
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return properties.concat(oneOfInstances as any);
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const buildElement = (element: Element): any => {
+    const type = buildType(element);
+
+    const propeFromType = element.complexType
+        ? buildComplexTypePropertie(type, element.complexType)
+        : buildSimplePropertie(type, element.simpleType!);
 
     return {
-        [element['@name']]: {
+        [element['@name'] || element['@ref']!]: {
             required: element['@minOccurs'] !== '0',
             description: buildDescription(element.annotation?.documentation),
             type,
-            enum: enummeration,
-            pattern: buildPattern(element.simpleType),
-            ...complexType,
-            example: enummeration !== undefined ? enummeration[0] : undefined,
+            ...propeFromType,
         },
     };
 };
