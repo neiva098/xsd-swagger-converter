@@ -7,7 +7,7 @@ xsd-swagger-converter
 
 * parse your xsd file to json in https://www.freeformatter.com/xml-to-json-converter.html#ad-output
 
-* paste your parsed xsd in "src\xsd" and name the file to "jsonXsd.json"
+* paste your parsed xsd in "definitions" and name the file to "jsonXsd.json"
 
 * run with **npm run dev** or **npm run build && npm start**
 
