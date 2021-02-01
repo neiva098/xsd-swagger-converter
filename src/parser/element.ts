@@ -45,7 +45,7 @@ export const buildComplexTypePropertie = (
     type: string,
     complexType: ComplexType,
 ): { allOf: unknown } | { items: { allOf: unknown } } | undefined => {
-    const propertie = { allOf: buildComplexType(complexType)! };
+    const propertie = { allOf: [buildComplexType(complexType)!] };
 
     if (type === 'array')
         return {
