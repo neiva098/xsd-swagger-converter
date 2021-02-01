@@ -49,8 +49,6 @@ export const getComplexTypePropertie = (
     type: 'object' | 'array' | 'string',
     complexType?: ComplexType,
 ): { allOf: unknown } | { items: { allOf: unknown } } | undefined => {
-    if (type === 'string') return undefined;
-
     const propertie = { allOf: buildComplexType(complexType) };
 
     if (type === 'array')
@@ -104,9 +102,10 @@ const buildComplexType = (complexType?: ComplexType) => {
 
 export const buildElement = (element: Element): SwaggerElement => {
     const type = buildType(element);
-
-    const complexType = getComplexTypePropertie(type, element.complexType) || {};
     const enummeration = buildEnum(element.simpleType?.restriction?.enumeration);
+
+    const complexType =
+        type !== 'string' ? getComplexTypePropertie(type, element.complexType) : {};
 
     return {
         [element['@name']]: {

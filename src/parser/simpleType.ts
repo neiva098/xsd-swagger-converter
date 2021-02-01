@@ -11,9 +11,7 @@ export const buildEnum = (
 ): string[] | undefined => {
     if (!ennumeration) return undefined;
 
-    const normalizedEnumeration: Enumeration[] = [];
+    const normalizedEnumeration = ([] as Enumeration[]).concat(ennumeration);
 
-    return normalizedEnumeration
-        .concat(ennumeration)
-        .map(element => element['@value']!);
+    return normalizedEnumeration.map(element => element['@value']!);
 };
