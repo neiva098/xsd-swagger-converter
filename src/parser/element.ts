@@ -45,7 +45,7 @@ export const buildComplexTypePropertie = (
     type: string,
     complexType: ComplexType,
 ): { allOf: unknown } | { items: { allOf: unknown } } | undefined => {
-    const propertie = { allOf: [buildComplexType(complexType)!] };
+    const propertie = { allOf: buildComplexType(complexType) };
 
     if (type === 'array')
         return {
@@ -78,12 +78,19 @@ export const buildSimplePropertie = (
     return properties;
 };
 
-export const buildChoice = (choice?: Choice): SwagguerChoice | undefined => {
+export const buildChoice = (choice?: Choice): any => {
     if (!choice?.element) return undefined;
 
     return {
         oneOf: choice?.element?.map(element => {
-            return buildElement(element);
+            const buildedElement = buildElement(element);
+
+            return {
+                title: element['@name'],
+                name: element['@name'],
+                type: 'object',
+                properties: buildedElement,
+            };
         }),
     };
 };
@@ -122,25 +129,20 @@ export const buildComplexType = (complexType?: ComplexType): any => {
         complexType?.choice ? [complexType.choice] : [],
     );
 
-    const properties = elements.map(element => buildElement(element));
+    let objectProperties: Record<string, unknown> = {};
 
-    const oneOfInstances = choices.map(choice => buildChoice(choice));
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const propertiesArray = properties.concat(oneOfInstances as any);
-
-    const objectProperties = {
-        properties: {},
-    };
-
-    propertiesArray.forEach((prop): void => {
-        objectProperties.properties = Object.assign(
-            objectProperties.properties,
-            prop,
-        );
+    elements.forEach((element): void => {
+        objectProperties = Object.assign(objectProperties, buildElement(element));
     });
 
-    return objectProperties;
+    const result: any =
+        elements.length > 0 ? [{ properties: objectProperties }] : [];
+
+    choices.forEach((choice): void => {
+        result.push(buildChoice(choice));
+    });
+
+    return result;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

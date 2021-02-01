@@ -7,9 +7,7 @@ export const handleRootIsElement = (
 ): BuildedSwagguerInterface[] => {
     return [
         {
-            [element['@name']!]: {
-                ...buildComplexType(element.complexType),
-            },
+            [element['@name']!]: buildComplexType(element.complexType),
         },
     ];
 };
@@ -19,9 +17,7 @@ export const handleRootIsComplexType = (
 ): BuildedSwagguerInterface[] => {
     return complexType.map(ct => {
         return {
-            [ct['@name']!]: {
-                ...buildComplexType(ct),
-            },
+            [ct['@name']!]: buildComplexType(ct),
         };
     });
 };
