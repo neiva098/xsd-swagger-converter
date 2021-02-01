@@ -3,14 +3,9 @@ import {
     ComplexType,
     DoccumentationType,
     Element,
-    RootObject,
     Sequence,
 } from '../xsd/interfaces';
-import {
-    BuildedSwagguerInterface,
-    SwaggerElement,
-    SwagguerChoice,
-} from './interfaces';
+import { SwaggerElement, SwagguerChoice } from './interfaces';
 import { buildEnum, buildPattern } from './simpleType';
 
 export const removeSpecialCharecter = (text: string | null): string => {
@@ -84,7 +79,9 @@ export const concatAllElementsOnSequence = (
     return actual;
 };
 
-const buildComplexType = (complexType?: ComplexType) => {
+export const buildComplexType = (
+    complexType?: ComplexType,
+): SwaggerElement[] | undefined => {
     if (!complexType) return undefined;
 
     const elements: Element[] = concatAllElementsOnSequence(complexType.sequence);
@@ -118,14 +115,4 @@ export const buildElement = (element: Element): SwaggerElement => {
             example: enummeration !== undefined ? enummeration[0] : undefined,
         },
     };
-};
-
-export const xsdJsonToDoc = (root: RootObject): BuildedSwagguerInterface[] => {
-    return root.complexType!.map(ct => {
-        return {
-            [ct['@name']!]: {
-                properties: buildComplexType(ct),
-            },
-        };
-    });
 };

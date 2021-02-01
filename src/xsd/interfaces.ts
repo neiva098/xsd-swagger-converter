@@ -94,4 +94,5 @@ export interface RootObject {
     include?: Include;
     complexType?: ComplexType[];
     simpleType?: SimpleType[];
+    element?: Element;
 }
