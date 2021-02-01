@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { xsdJsonToDoc } from './parser/element';
+import { xsdJsonToDoc } from './parser';
 import rootXsd from './xsd/jsonXsd.json';
 
 function main() {
