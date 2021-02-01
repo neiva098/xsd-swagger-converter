@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+        "lib": [
+            "es5",
+            "es6"
+        ],
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "pretty": true,
+        "strict": true,
+        "strictPropertyInitialization": false,
+        "sourceMap": true,
+        "target": "ES2017",
+        "outDir": "./dist",
+        "baseUrl": "./lib",
+        "esModuleInterop": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+    },
+    "files": [
+        "typings.d.ts"
+    ],
+    "include": [
+        "src/**/*.ts"
+, "src/Entities/person/validator"    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
