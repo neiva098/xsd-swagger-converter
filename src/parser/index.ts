@@ -8,7 +8,7 @@ export const handleRootIsElement = (
     return [
         {
             [element['@name']!]: {
-                properties: buildComplexType(element.complexType),
+                ...buildComplexType(element.complexType),
             },
         },
     ];
@@ -20,7 +20,7 @@ export const handleRootIsComplexType = (
     return complexType.map(ct => {
         return {
             [ct['@name']!]: {
-                properties: buildComplexType(ct),
+                ...buildComplexType(ct),
             },
         };
     });

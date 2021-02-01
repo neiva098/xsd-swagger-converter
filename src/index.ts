@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { xsdJsonToDoc } from './parser';
-import rootXsd from '../definitions/jsonXsd.json';
+import rootXsd from '../definitions/jsonXsd1.json';
 
 function main() {
     const swagguerDefinitions = xsdJsonToDoc(rootXsd);

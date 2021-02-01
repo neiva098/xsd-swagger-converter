@@ -6,11 +6,7 @@ import {
     Sequence,
     SimpleType,
 } from '../xsd/interfaces';
-import {
-    SimpleTypePropertiesInterface,
-    SwaggerElement,
-    SwagguerChoice,
-} from './interfaces';
+import { SimpleTypePropertiesInterface, SwagguerChoice } from './interfaces';
 import { buildEnum, buildPattern } from './simpleType';
 
 export const removeSpecialCharecter = (text: string | null): string => {
@@ -118,7 +114,8 @@ export const concatAllChoicesOnSequence = (
     return actual;
 };
 
-export const buildComplexType = (complexType?: ComplexType): SwaggerElement[] => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const buildComplexType = (complexType?: ComplexType): any => {
     const elements: Element[] = concatAllElementsOnSequence(complexType?.sequence);
     const choices: Choice[] = concatAllChoicesOnSequence(
         complexType?.sequence,
@@ -130,7 +127,20 @@ export const buildComplexType = (complexType?: ComplexType): SwaggerElement[] =>
     const oneOfInstances = choices.map(choice => buildChoice(choice));
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return properties.concat(oneOfInstances as any);
+    const propertiesArray = properties.concat(oneOfInstances as any);
+
+    const objectProperties = {
+        properties: {},
+    };
+
+    propertiesArray.forEach((prop): void => {
+        objectProperties.properties = Object.assign(
+            objectProperties.properties,
+            prop,
+        );
+    });
+
+    return objectProperties;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
